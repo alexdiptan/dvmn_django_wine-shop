@@ -1,3 +1,4 @@
+import collections
 from datetime import datetime
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 
@@ -17,10 +18,10 @@ def get_year_ending(digit):
         if str(digit).endswith(str(exception_digit)):
             return "лет"
     if (
-            (digit > 1 or digit < 5)
-            or str(digit).endswith("2")
-            or str(digit).endswith("3")
-            or str(digit).endswith("4")
+        (digit > 1 or digit < 5)
+        or str(digit).endswith("2")
+        or str(digit).endswith("3")
+        or str(digit).endswith("4")
     ):
         return "года"
     if digit == 1 or str(digit).endswith("1"):
@@ -30,14 +31,19 @@ def get_year_ending(digit):
 
 
 excel_data_df = pandas.read_excel(
-    "wine.xlsx",
-    sheet_name="Лист1",
+    "wine3.xlsx", sheet_name="Лист1", keep_default_na=False
 )
+
+drinks = excel_data_df.to_dict(orient="records")
+
+drinks_by_categories = collections.defaultdict(list)
+for drink_row in drinks:
+    drinks_by_categories[drink_row["Категория"]].append(drink_row)
 
 rendered_page = template.render(
     foundation=years_since_foundation,
     year_ending=get_year_ending(years_since_foundation),
-    wines=excel_data_df.to_dict(orient='records'),
+    drinks_by_categories=drinks_by_categories,
 )
 
 with open("index.html", "w", encoding="utf8") as file:
