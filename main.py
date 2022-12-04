@@ -9,14 +9,16 @@ env = Environment(loader=FileSystemLoader("."), autoescape=select_autoescape(["h
 template = env.get_template("template.html")
 
 current_year = datetime.today().year
-years_since_foundation = current_year - 1920
+winery_since_year = 1920
+foundation_year = current_year - winery_since_year
 
 
 def get_year_ending(digit):
-    exception_digits = [i for i in range(11, 20)]
-    for exception_digit in exception_digits:
+    for exception_digit in range(5, 20):
         if str(digit).endswith(str(exception_digit)):
             return "лет"
+    if digit == 1 or str(digit).endswith("1"):
+        return "год"
     if (
         (digit > 1 or digit < 5)
         or str(digit).endswith("2")
@@ -24,8 +26,6 @@ def get_year_ending(digit):
         or str(digit).endswith("4")
     ):
         return "года"
-    if digit == 1 or str(digit).endswith("1"):
-        return "год"
     else:
         return "лет"
 
@@ -42,8 +42,8 @@ def main():
         drinks_by_categories[drink_row["Категория"]].append(drink_row)
 
     rendered_page = template.render(
-        foundation=years_since_foundation,
-        year_ending=get_year_ending(years_since_foundation),
+        foundation=foundation_year,
+        year_ending=get_year_ending(foundation_year),
         drinks_by_categories=drinks_by_categories,
     )
 
