@@ -31,7 +31,7 @@ def get_year_ending(digit):
 
 
 excel_data_df = pandas.read_excel(
-    "wine_catalog.xlsx", sheet_name="Лист1", keep_default_na=False
+    "drinks_catalog.xlsx", sheet_name="Лист1", keep_default_na=False
 )
 
 drinks = excel_data_df.to_dict(orient="records")
