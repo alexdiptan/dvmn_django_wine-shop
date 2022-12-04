@@ -16,6 +16,7 @@ cd dvmn_django_wine-shop
 - Создайте виртуальное окружение и активируйте его:
 ```
 python3 -m venv my_env
+source my_env/bin/activate
 ```
 - установите зависимости:
 ```
