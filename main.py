@@ -5,6 +5,12 @@ from http.server import HTTPServer, SimpleHTTPRequestHandler
 import pandas
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
+from environs import Env
+
+env_vars = Env()
+env_vars.read_env()
+CATALOG_FILE = env_vars.str("CATALOG_FILE", "")
+
 env = Environment(loader=FileSystemLoader("."), autoescape=select_autoescape(["html"]))
 template = env.get_template("template.html")
 
@@ -32,7 +38,7 @@ def get_year_ending(digit):
 
 def main():
     excel_data_df = pandas.read_excel(
-        "drinks_catalog.xlsx", sheet_name="Лист1", keep_default_na=False
+        CATALOG_FILE, sheet_name="Лист1", keep_default_na=False
     )
 
     drinks = excel_data_df.to_dict(orient="records")
@@ -54,5 +60,5 @@ def main():
     server.serve_forever()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
