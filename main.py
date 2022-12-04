@@ -30,24 +30,29 @@ def get_year_ending(digit):
         return "лет"
 
 
-excel_data_df = pandas.read_excel(
-    "drinks_catalog.xlsx", sheet_name="Лист1", keep_default_na=False
-)
+def main():
+    excel_data_df = pandas.read_excel(
+        "drinks_catalog.xlsx", sheet_name="Лист1", keep_default_na=False
+    )
 
-drinks = excel_data_df.to_dict(orient="records")
+    drinks = excel_data_df.to_dict(orient="records")
 
-drinks_by_categories = collections.defaultdict(list)
-for drink_row in drinks:
-    drinks_by_categories[drink_row["Категория"]].append(drink_row)
+    drinks_by_categories = collections.defaultdict(list)
+    for drink_row in drinks:
+        drinks_by_categories[drink_row["Категория"]].append(drink_row)
 
-rendered_page = template.render(
-    foundation=years_since_foundation,
-    year_ending=get_year_ending(years_since_foundation),
-    drinks_by_categories=drinks_by_categories,
-)
+    rendered_page = template.render(
+        foundation=years_since_foundation,
+        year_ending=get_year_ending(years_since_foundation),
+        drinks_by_categories=drinks_by_categories,
+    )
 
-with open("index.html", "w", encoding="utf8") as file:
-    file.write(rendered_page)
+    with open("index.html", "w", encoding="utf8") as file:
+        file.write(rendered_page)
 
-server = HTTPServer(("0.0.0.0", 8000), SimpleHTTPRequestHandler)
-server.serve_forever()
+    server = HTTPServer(("0.0.0.0", 8000), SimpleHTTPRequestHandler)
+    server.serve_forever()
+
+
+if __name__ == '__main__':
+    main()
