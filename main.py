@@ -7,17 +7,6 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from environs import Env
 
-env_vars = Env()
-env_vars.read_env()
-CATALOG_FILE = env_vars.str("CATALOG_FILE", "")
-
-env = Environment(loader=FileSystemLoader("."), autoescape=select_autoescape(["html"]))
-template = env.get_template("template.html")
-
-current_year = datetime.today().year
-winery_since_year = 1920
-foundation_year = current_year - winery_since_year
-
 
 def get_year_ending(digit):
     for exception_digit in range(5, 20):
@@ -37,8 +26,19 @@ def get_year_ending(digit):
 
 
 def main():
+    env_vars = Env()
+    env_vars.read_env()
+    catalog_file = env_vars.str("CATALOG_FILE", "")
+
+    env = Environment(loader=FileSystemLoader("."), autoescape=select_autoescape(["html"]))
+    template = env.get_template("template.html")
+
+    current_year = datetime.today().year
+    winery_since_year = 1920
+    foundation_year = current_year - winery_since_year
+
     excel_data_df = pandas.read_excel(
-        CATALOG_FILE, sheet_name="Лист1", keep_default_na=False
+        catalog_file, sheet_name="Лист1", keep_default_na=False
     )
 
     drinks = excel_data_df.to_dict(orient="records")
